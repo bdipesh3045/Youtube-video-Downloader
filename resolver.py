@@ -1,31 +1,44 @@
 link="https://youtu.be/Zv11L-ZfrSg"
-link="https://youtu.be/is38pqgbj6A"
+# link="https://youtu.be/is38pqgbj6A"
 from pytube import YouTube
 a=YouTube(link)
 data=a.streams
+li=[]
 # .filter(file_extension='mp4')
 for i in data.filter(progressive=True):
     
     try:
-        
-            print(f"{i.itag}:{i.resolution}")
+            li.append({i.resolution:[i.itag,"p"]})
     except:
         pass
-print("  ")
+
 for i in data.filter(file_extension='mp4'):
     try:
         resol=i.resolution
         
         if resol:
-            print(f"{i.itag}:{resol}")
+            li.append({resol:[i.itag,"m"]})
     except:
         pass
 bit={}
 for z in data.filter(only_audio=True):
     bit[f"""{(z.abr).split("kbps")[0]}"""]=f"{z.itag}"
 a=max(map(int, bit.keys()))
-print({f"{a}":f"{bit[str(a)]}"})
-
+li.append({f"{a}":[f"{bit[str(a)]}","a"]})
+unique=[]
+index=0
+keys=[]
+for d in li:
+    for z in d:
+        
+        if (d[z][1]=="p") :
+            keys.append(z)
+            unique.append(d)
+    for key in d.keys():
+        if key not in keys:
+            keys.append(key)
+            unique.append(d)
+print(unique)
 
 # stream=a.streams.get_by_itag(251)
 # stream.download()
